@@ -54,6 +54,7 @@ class WechatBasic(WechatBase):
         self.__jsapi_ticket = jsapi_ticket
         self.__jsapi_ticket_expires_at = jsapi_ticket_expires_at
 
+        self.__checkssl = checkssl
         self.__encoding_aes_key = None
         self.__crypto = None
         if encoding_aes_key:
@@ -922,6 +923,7 @@ class WechatBasic(WechatBase):
         r = requests.request(
             method=method,
             url=url,
+            verify=self.__checkssl,
             **kwargs
         )
         r.raise_for_status()
