@@ -36,7 +36,7 @@ class WechatBasic(object):
         :param access_token_expires_at: 直接导入的 access_token 的过期日期，该值需要在上一次该类实例化之后手动进行缓存并在此处传入, 如果不传入, 将会在需要时自动重新获取
         :param jsapi_ticket: 直接导入的 jsapi_ticket 值, 该值需要在上一次该类实例化之后手动进行缓存并在此处传入, 如果不传入, 将会在需要时自动重新获取
         :param jsapi_ticket_expires_at: 直接导入的 jsapi_ticket 的过期日期，该值需要在上一次该类实例化之后手动进行缓存并在此处传入, 如果不传入, 将会在需要时自动重新获取
-        :param checkssl: 是否检查 SSL, 默认为 False, 可避免 urllib3 的 InsecurePlatformWarning 警告
+        :param checkssl: 是否检查 SSL, 默认为 False, 可避免 urllib3 的 InsecurePlatformWarning 警告；requests的verify=checkssl
         """
         if not checkssl:
             disable_urllib3_warning()  # 可解决 InsecurePlatformWarning 警告
@@ -48,6 +48,7 @@ class WechatBasic(object):
         self.__partnerkey = partnerkey
         self.__paysignkey = paysignkey
 
+        self.__checkssl = checkssl
         self.__access_token = access_token
         self.__access_token_expires_at = access_token_expires_at
         self.__jsapi_ticket = jsapi_ticket
@@ -911,6 +912,7 @@ class WechatBasic(object):
         r = requests.request(
             method=method,
             url=url,
+            verify=self.__checkssl,
             **kwargs
         )
         r.raise_for_status()
